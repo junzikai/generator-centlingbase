@@ -1,0 +1,9 @@
+{
+  "generator-node": {
+    "promptValues": {
+      "authorName": "Jack Gao",
+      "authorEmail": "jack.gao@centling.com",
+      "authorUrl": ""
+    }
+  }
+}
