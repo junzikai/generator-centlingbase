@@ -1,10 +1,10 @@
 'use strict';
 const Generator = require('yeoman-generator');
-const chalk = require('chalk');
-const yosay = require('yosay');
+// Const chalk = require('chalk');
+// const yosay = require('yosay');
 const shell = require('shelljs');
 const prompts = require('./prompts');
-const glob = require('glob');
+// Const glob = require('glob');
 
 module.exports = class extends Generator {
   constructor(args, opts) {
@@ -139,98 +139,97 @@ module.exports = class extends Generator {
     // This.spawnCommandSync('java', ['-jar',this.templatePath('mybatis-generator-core-1.3.6-SNAPSHOT.jar'),'-configfile', this.destinationPath('generatorConfig.xml'),'-overwrite']);
     var self = this;
     setTimeout(function() {
-      if (
-        shell.exec(
-          'java -Djava.ext.dirs=./lib -jar ./lib/mybatis-generator-core-1.3.6-SNAPSHOT.jar -configfile generatorConfig.xml -overwrite'
-        ).code !== 0
-      ) {
+      var result = shell.exec(
+        'java -Djava.ext.dirs=./lib -jar ./lib/mybatis-generator-core-1.3.6-SNAPSHOT.jar -configfile generatorConfig.xml -overwrite'
+      ).code;
+      if (result !== 0) {
         shell.echo('Error: mybatis generate failed');
         shell.exit(1);
-      } else {
-        var localPackageName = self.packageName;
-        var packageNameTemp = localPackageName.replace('.', '/');
-        var domainDir = self.destinationPath(
-          'src/main/java/' + packageNameTemp + '/domain/' + self.subPackageName + '/'
-        );
-        var dtoDir = self.destinationPath(
-          'src/main/java/' + packageNameTemp + '/domain/' + self.subPackageName + '/dto/'
-        );
-
-        if (!self.fs.exists(dtoDir)) {
-          self.spawnCommandSync('mkdir', ['-p', dtoDir]);
-        }
-
-        /* Self.fs.copy(
-          domainDir + self.domainName + ".java",
-          dtoDir + self.domainName + "Dto.java"
-        ); */
-
-        // /创建dto文件
-        var domainFileStr = self.fs.read(domainDir + self.domainName + '.java');
-        var dtoFileStr = domainFileStr.replace(
-          'class ' + self.domainName,
-          'class ' + self.domainName + 'Dto'
-        );
-        // Console.log(dtoFileStr);
-        dtoFileStr = dtoFileStr.replace(
-          self.packageName + '.domain.' + self.subPackageName,
-          self.packageName + '.domain.' + self.subPackageName + '.dto'
-        );
-        // Console.log(dtoFileStr);
-        self.fs.write(dtoDir + self.domainName + 'Dto.java', dtoFileStr);
-
-        // 创建mapstruct文件
-        var mapStructSourceFile = self.templatePath(
-          'src/com/base/controller/mapstruct/_EntityMapStruct.java'
-        );
-        var mapStructTargetDir = self.destinationPath(
-          'src/main/java/' +
-            packageNameTemp +
-            '/controller/mapstruct/' +
-            self.subPackageName +
-            '/'
-        );
-        var mapStructTargetFile = mapStructTargetDir + self.domainName + 'MapStruct.java';
-
-        if (!self.fs.exists(mapStructTargetDir)) {
-          self.spawnCommandSync('mkdir', ['-p', mapStructTargetDir]);
-        }
-
-        // Console.log(mapStructSourceFile, mapStructTargetDir, mapStructTargetFile);
-
-        self.fs.copyTpl(mapStructSourceFile, mapStructTargetFile, templateOptions);
-
-        // 创建Service和controller的路径，拷贝Service和controller
-        var serviceSourceFilePath = self.templatePath(
-          'src/com/base/service/_EntityService.java'
-        );
-        var serviceTargetDir = self.destinationPath(
-          'src/main/java/' + packageNameTemp + '/service/' + self.subPackageName + '/'
-        );
-        if (!self.fs.exists(serviceTargetDir)) {
-          self.spawnCommandSync('mkdir', ['-p', serviceTargetDir]);
-        }
-        self.fs.copyTpl(
-          serviceSourceFilePath,
-          serviceTargetDir + self.domainName + 'Service.java',
-          templateOptions
-        );
-
-        var controllerSourceFilePath = self.templatePath(
-          'src/com/base/controller/_EntityController.java'
-        );
-        var controllerTargetDir = self.destinationPath(
-          'src/main/java/' + packageNameTemp + '/controller/' + self.subPackageName + '/'
-        );
-        if (!self.fs.exists(controllerTargetDir)) {
-          self.spawnCommandSync('mkdir', ['-p', controllerTargetDir]);
-        }
-        self.fs.copyTpl(
-          controllerSourceFilePath,
-          controllerTargetDir + self.domainName + 'Controller.java',
-          templateOptions
-        );
       }
+
+      var localPackageName = self.packageName;
+      var packageNameTemp = localPackageName.replace('.', '/');
+      var domainDir = self.destinationPath(
+        'src/main/java/' + packageNameTemp + '/domain/' + self.subPackageName + '/'
+      );
+      var dtoDir = self.destinationPath(
+        'src/main/java/' + packageNameTemp + '/domain/' + self.subPackageName + '/dto/'
+      );
+
+      if (!self.fs.exists(dtoDir)) {
+        self.spawnCommandSync('mkdir', ['-p', dtoDir]);
+      }
+
+      /* Self.fs.copy(
+        domainDir + self.domainName + ".java",
+        dtoDir + self.domainName + "Dto.java"
+      ); */
+
+      // /创建dto文件
+      var domainFileStr = self.fs.read(domainDir + self.domainName + '.java');
+      var dtoFileStr = domainFileStr.replace(
+        'class ' + self.domainName,
+        'class ' + self.domainName + 'Dto'
+      );
+      // Console.log(dtoFileStr);
+      dtoFileStr = dtoFileStr.replace(
+        self.packageName + '.domain.' + self.subPackageName,
+        self.packageName + '.domain.' + self.subPackageName + '.dto'
+      );
+      // Console.log(dtoFileStr);
+      self.fs.write(dtoDir + self.domainName + 'Dto.java', dtoFileStr);
+
+      // 创建mapstruct文件
+      var mapStructSourceFile = self.templatePath(
+        'src/com/base/controller/mapstruct/_EntityMapStruct.java'
+      );
+      var mapStructTargetDir = self.destinationPath(
+        'src/main/java/' +
+          packageNameTemp +
+          '/controller/mapstruct/' +
+          self.subPackageName +
+          '/'
+      );
+      var mapStructTargetFile = mapStructTargetDir + self.domainName + 'MapStruct.java';
+
+      if (!self.fs.exists(mapStructTargetDir)) {
+        self.spawnCommandSync('mkdir', ['-p', mapStructTargetDir]);
+      }
+
+      // Console.log(mapStructSourceFile, mapStructTargetDir, mapStructTargetFile);
+
+      self.fs.copyTpl(mapStructSourceFile, mapStructTargetFile, templateOptions);
+
+      // 创建Service和controller的路径，拷贝Service和controller
+      var serviceSourceFilePath = self.templatePath(
+        'src/com/base/service/_EntityService.java'
+      );
+      var serviceTargetDir = self.destinationPath(
+        'src/main/java/' + packageNameTemp + '/service/' + self.subPackageName + '/'
+      );
+      if (!self.fs.exists(serviceTargetDir)) {
+        self.spawnCommandSync('mkdir', ['-p', serviceTargetDir]);
+      }
+      self.fs.copyTpl(
+        serviceSourceFilePath,
+        serviceTargetDir + self.domainName + 'Service.java',
+        templateOptions
+      );
+
+      var controllerSourceFilePath = self.templatePath(
+        'src/com/base/controller/_EntityController.java'
+      );
+      var controllerTargetDir = self.destinationPath(
+        'src/main/java/' + packageNameTemp + '/controller/' + self.subPackageName + '/'
+      );
+      if (!self.fs.exists(controllerTargetDir)) {
+        self.spawnCommandSync('mkdir', ['-p', controllerTargetDir]);
+      }
+      self.fs.copyTpl(
+        controllerSourceFilePath,
+        controllerTargetDir + self.domainName + 'Controller.java',
+        templateOptions
+      );
       // Copy controller service mapstruct dto
     }, 2000);
   }

@@ -42,14 +42,17 @@
         <javaModelGenerator targetPackage="<%= packageName %>.domain.<%= subPackageName %>" targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
             <property name="trimStrings" value="true"/>
+            <property name="javaFileEncoding" value="UTF-8"/>
         </javaModelGenerator>
         <!--生成映射文件存放位置-->
         <sqlMapGenerator targetPackage="<%= subPackageName %>" targetProject="src/main/resources/mapper">
             <property name="enableSubPackages" value="true"/>
+            <property name="javaFileEncoding" value="UTF-8"/>
         </sqlMapGenerator>
         <!--生成Dao类存放位置-->
         <javaClientGenerator type="XMLMAPPER" targetPackage="<%= packageName %>.mapper.<%= subPackageName %>" targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
+            <property name="javaFileEncoding" value="UTF-8"/>
         </javaClientGenerator>
         <!--生成对应表及类名-->
         <table tableName="<%= entityTableName %>" domainObjectName="<%= domainName %>" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
